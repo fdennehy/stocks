@@ -1,32 +1,33 @@
-name: Run Stocks Script
+name: Run Python Script and Push Changes
 
 on:
   schedule:
-    - cron: '0 10 * * *' # This schedules the job to run every day at 10 AM UTC
-  workflow_dispatch:
+    - cron: '0 10 * * *'  # Run at 10:00 AM UTC every day
+  workflow_dispatch:  # Allow manual trigger (optional)
 
 jobs:
   run-stocks-script:
-    runs-on: ubuntu-latest # Using an Ubuntu runner
-    
+    runs-on: ubuntu-latest  # You can change this to another OS like 'windows-latest' or 'macos-latest'
+
     steps:
-      # Check out the repository
-      - name: Checkout code
-        uses: actions/checkout@v3
-        
-      # Set up Python environment
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x' # You can specify a specific Python version, like '3.9'
+    - name: Checkout repository
+      uses: actions/checkout@v3  # Clones the repository
 
-      # Install dependencies (if any)
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt # Assuming you have a requirements.txt file
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'  # Use the Python version you need (e.g., 3.10)
 
-      # Run the Python script
-      - name: Run stocks.py
-        run: |
-          python stocks.py
+    - name: Install dependencies
+      run: pip install -r requirements.txt  # Install dependencies from requirements.txt
+
+    - name: Run stocks.py script
+      run: python stocks.py  # Run the Python script
+
+    - name: Commit and push changes
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+        git add .
+        git commit -m "Automated update from GitHub Actions" || echo "No changes to commit"
+        git push origin main  # Change 'main' to the correct branch if needed
