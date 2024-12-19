@@ -1,4 +1,4 @@
-nname: Run Python Script and Push Changes
+name: Run Python Script and Push Changes
 
 on:
   schedule:
